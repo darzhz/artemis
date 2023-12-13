@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Prisma schema for Users table
+model Users {
+  user_id       Int      @id @default(autoincrement())
+  name          String
+  role          String  
+  email         String?
+  address       String?
+  contact       Int?
+  passwordHash  String
+  created_at    DateTime?
+  // Note: 'Stores user data'
+  students      Student?  // One-to-Many relationship with Student table
+  Faculty       Faculty?
+  attendences   attendence?
+}
+model Faculty {
+  faculty_id    Int @id
+  name          String
+  role          String
+  email         String?  @unique
+  contact       Int?
+  dept_name     String
+  created_at    DateTime
+  department    department @relation(fields: [dept_name], references: [dept_name])
+  faculty    Users @relation(fields: [faculty_id],references: [user_id])
+}
+// Prisma schema for Student table
+// Prisma schema for Student table
+model Student {
+  user_id      Int        @id
+  dept         String
+  semester     Int
+  dob          DateTime
+  rollnum      Int
+  admNum       Int
+  pfp          String
+  cgpa         Float
+  academicInfo Json
+  user         Users      @relation(fields: [user_id], references: [user_id])  // Foreign key relationship
+  department   department @relation(fields: [dept], references: [dept_name])
+}
+
+// Prisma schema for department table
+model department {
+  deptid      Int      @id @default(autoincrement()) @unique
+  dept_name   String   @unique
+  students    Student[]
+  subjects    subjects[]
+  faculties   Faculty[]
+}
+
+model subjects {
+  sub_code      String   @id @unique
+  sub_name      String
+  faculty_code  String   @unique
+  deptid        Int
+  department    department @relation(fields: [deptid], references: [deptid])
+  attendences   attendence[]
+}
+
+// Prisma schema for attendence table
+model attendence {
+  user_id      Int      @id
+  sub_code     String   @unique
+  time         DateTime
+  absent       Json
+  dutyLeave    Json
+  user      Users   @relation(fields: [user_id], references: [user_id])
+  subject      subjects  @relation(fields: [sub_code], references: [sub_code])
+}
+

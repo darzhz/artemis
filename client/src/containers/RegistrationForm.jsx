@@ -6,7 +6,8 @@ const RegistrationForm = () => {
     username: '',
     email: '',
     password: '',
-    profilePic: null, // To store the selected profile picture
+    type: 'Student',
+    profilePic: null, 
   });
 
   const handleChange = (e) => {
@@ -28,6 +29,7 @@ const RegistrationForm = () => {
     formDataToSend.append('email', formData.email);
     formDataToSend.append('password', formData.password);
     formDataToSend.append('profilePic', formData.profilePic);
+    formDataToSend.append('type',formData.type)
 
     try {
       const response = await fetch('/register', {
@@ -36,14 +38,12 @@ const RegistrationForm = () => {
       });
 
       if (response.ok) {
-        // Registration was successful
-        // You can redirect or show a success message
+        // Reg success
       } else {
-        // Registration failed, handle errors
+        // Reg failed,
       }
     } catch (error) {
-      console.error('Error:', error);
-      // Handle network errors
+      console.error('Error:', error)
     }
   });
 

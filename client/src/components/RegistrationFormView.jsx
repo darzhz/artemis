@@ -39,6 +39,15 @@ const RegistrationFormView = ({ formData, handleChange, handleSubmit }) => {
             required
           />
         </div>
+        <div className="mb-2">
+          <label htmlFor="type" className="label"><span className="label-text">User Type</span></label>
+            <select name="type" id="type" className='mx-auto input input-bordered w-full max-w-xs' value={formData.type} onChange={handleChange}>
+            <option value="student" selected>Student</option>
+            <option value="faculty">Faculty</option>
+            <option value="HOD">Head of Department</option>
+            <option value="Admin">Admin</option>
+            </select>
+        </div>
         <div className="mb-4">
           <label className="label" htmlFor="email">
             <span className='label-text'>email</span>

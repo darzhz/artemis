@@ -1,0 +1,70 @@
+Table Users {
+    user_id integer [primary key, not null, unique]
+     name varchar
+     role varchar [not null, unique]
+     email varchar 
+     address varchar
+     contact integer
+     passwordHash varchar [not null, unique]
+     created_at timestamp
+    Note: 'Stores user data'
+     }
+    
+     Table student {
+    user_id integer
+    department varchar
+    semester integer
+    dob timestamp
+    rollnum integer 
+    admNum integer
+     pfp varchar
+     cgpa float
+     academicInfo json
+     }
+    
+     Table department {
+     deptid integer [primary key,not null, unique]
+     dept_name varchar [not null, unique]
+     }  
+     Table subjects {
+     sub_code varchar [pk,not null, unique]  
+     sub_name varchar [not null]
+     faculty_code varchar [not null, unique]
+     deptid integer [not null, unique]
+     }
+    Table attendence {
+     user_id integer [primary key]
+     sub_code varchar [unique]
+     time timestamp
+     absent json
+     dutyLeave json
+    }
+    Table Faculty {
+      faculty_id integer [primary key, not null, unique]
+      name varchar
+      role varchar [not null]
+      email varchar [unique]
+      contact integer
+      department_id integer
+      created_at timestamp
+    }
+    Table Exams {
+      exam_id integer [primary key, not null, unique]
+      course_id integer [ref: > subjects.sub_code] // Reference to the Courses table
+      exam_date timestamp
+      exam_type varchar
+      faculty_in_charge integer [ref: > Faculty.faculty_id] // Reference to the Faculty table
+    }
+    
+    
+    
+    Ref: "student"."user_id" - "Users"."user_id"
+    
+    Ref: "department"."dept_name" - "student"."department"
+    
+    Ref: "attendence"."user_id" - "student"."user_id"
+    
+    Ref: "attendence"."sub_code" - "subjects"."sub_code"
+      
+    Ref: "Faculty"."department_id" - "department"."deptid"
+    
