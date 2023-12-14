@@ -1,9 +1,10 @@
 import React from 'react';
-
-const RegistrationFormView = ({ formData, handleChange, handleSubmit }) => {
+import Modal from './Modal';
+const RegistrationFormView = ({ formData, handleChange, handleSubmit, status }) => {
   return (
     <div>
       <form onSubmit={handleSubmit} >
+        {status=='ok' && <Modal mesg={"registration Successful"}/>}
       <div className="mb-4">
           {formData.profilePic && (
             <img
@@ -42,7 +43,7 @@ const RegistrationFormView = ({ formData, handleChange, handleSubmit }) => {
         <div className="mb-2">
           <label htmlFor="type" className="label"><span className="label-text">User Type</span></label>
             <select name="type" id="type" className='mx-auto input input-bordered w-full max-w-xs' value={formData.type} onChange={handleChange}>
-            <option value="student" selected>Student</option>
+            <option value="student" >Student</option>
             <option value="faculty">Faculty</option>
             <option value="HOD">Head of Department</option>
             <option value="Admin">Admin</option>

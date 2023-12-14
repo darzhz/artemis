@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import RegistrationFormView from '../components/RegistrationFormView';
 
+
 const RegistrationForm = () => {
+  const [status,setStatus] = useState('Wait');
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -38,9 +40,9 @@ const RegistrationForm = () => {
       });
 
       if (response.ok) {
-        // Reg success
+        setStatus('ok');
       } else {
-        // Reg failed,
+        setStatus('failed');
       }
     } catch (error) {
       console.error('Error:', error)
@@ -52,6 +54,7 @@ const RegistrationForm = () => {
       formData={formData}
       handleChange={handleChange}
       handleSubmit={handleSubmit}
+      status={status}
     />
   );
 };
