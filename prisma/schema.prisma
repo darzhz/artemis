@@ -15,7 +15,7 @@ model Users {
   user_id       Int      @id @default(autoincrement())
   name          String
   role          String  
-  email         String?
+  email         String  @unique
   address       String?
   contact       Int?
   passwordHash  String
@@ -29,17 +29,14 @@ model Faculty {
   faculty_id    Int @id
   name          String
   role          String
-  email         String?  @unique
-  contact       Int?
   dept_name     String
   created_at    DateTime
   department    department @relation(fields: [dept_name], references: [dept_name])
   faculty    Users @relation(fields: [faculty_id],references: [user_id])
 }
 // Prisma schema for Student table
-// Prisma schema for Student table
 model Student {
-  user_id      Int        @id
+  student_id      Int        @id
   dept         String
   semester     Int
   dob          DateTime
@@ -48,7 +45,7 @@ model Student {
   pfp          String
   cgpa         Float
   academicInfo Json
-  user         Users      @relation(fields: [user_id], references: [user_id])  // Foreign key relationship
+  user         Users      @relation(fields: [student_id], references: [user_id])  // Foreign key relationship
   department   department @relation(fields: [dept], references: [dept_name])
 }
 
