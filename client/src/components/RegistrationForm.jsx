@@ -190,6 +190,24 @@ const RegistrationForm = () => {
             }
             required
           />
+           <label htmlFor="Frole" className="label">
+          <span className="label-text">Role</span>
+        </label>
+        <select
+          id="Frole"
+          name="Frole"
+          className="mx-auto input input-bordered w-full max-w-xs"
+          value={secondPartData.Frole || ""}
+          onChange={(e) =>
+          setSecondPartData({ ...secondPartData, Frole: e.target.value })
+        }
+          required
+        >
+          <option value="">Select Role</option>
+          <option value="Asstprof">assistant professor</option>
+          <option value="prof">professor</option>
+          <option value="HOD">Head of Department</option>
+        </select>
 
           {/* Add other fields from the Faculty table */}
         </>

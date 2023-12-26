@@ -24,20 +24,20 @@ model Users {
   students      Student?  // One-to-Many relationship with Student table
   Faculty       Faculty?
   attendences   attendence?
+  timetable     Timetable[]
 }
 model Faculty {
   faculty_id    Int @id
-  name          String
   role          String
   dept_name     String
-  created_at    DateTime
   department    department @relation(fields: [dept_name], references: [dept_name])
-  faculty    Users @relation(fields: [faculty_id],references: [user_id])
+  user          Users @relation(fields: [faculty_id],references: [user_id])
 }
 // Prisma schema for Student table
 model Student {
   student_id      Int        @id
   dept         String
+  className    String?
   semester     Int
   dob          DateTime
   rollnum      Int
@@ -47,6 +47,7 @@ model Student {
   academicInfo Json
   user         Users      @relation(fields: [student_id], references: [user_id])  // Foreign key relationship
   department   department @relation(fields: [dept], references: [dept_name])
+  class        Class[]
 }
 
 // Prisma schema for department table
@@ -56,15 +57,42 @@ model department {
   students    Student[]
   subjects    subjects[]
   faculties   Faculty[]
+  classes     Class[]
+  timetables  Timetable[] // Add this line to define the opposite relation
+}
+model Class {
+  class_id      Int        @id @default(autoincrement())
+  class_name    String     @unique
+  dept          String
+  students      Student[]
+  subjects      subjects[]
+  timetable     Timetable[]
+  department    department  @relation(fields: [dept], references: [dept_name])
 }
 
 model subjects {
   sub_code      String   @id @unique
   sub_name      String
-  faculty_code  String   @unique
+  faculty_code  String   
   deptid        Int
+  subinfo       Json?
   department    department @relation(fields: [deptid], references: [deptid])
   attendences   attendence[]
+  classes       Class[]
+}
+
+model Timetable {
+  timetable_id  Int      @id @default(autoincrement())
+  day           String
+  period        Int
+  class_name    String
+  faculty_id    Int 
+  dept_name     String
+  sub_code      String
+  lecturer      Users    @relation(fields: [faculty_id], references: [user_id])
+  department    department @relation(fields: [dept_name], references: [dept_name])
+  class         Class    @relation(fields: [class_name], references: [class_name])
+  @@unique([day, period, class_name])
 }
 
 // Prisma schema for attendence table
@@ -77,4 +105,3 @@ model attendence {
   user      Users   @relation(fields: [user_id], references: [user_id])
   subject      subjects  @relation(fields: [sub_code], references: [sub_code])
 }
-
