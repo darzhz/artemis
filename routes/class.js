@@ -42,4 +42,8 @@ router.get("/getFacultyFreeHours/:facultycode", async (req, res) => {
   const freeHoursByDay = await utils.generateFreeHours(busyHours);
   res.send(freeHoursByDay);
 });
+router.post("/addAttendanceForMultipleUsers", async (req, res) => {
+  const result = await model.addAttendanceForMultipleUsers(req.body.data);
+  res.send(result);
+});
 module.exports = router;

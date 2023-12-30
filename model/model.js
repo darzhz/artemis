@@ -277,6 +277,32 @@ exports.addStudentsToClass = async (data) => {
     await prisma.$disconnect();
   }
 };
+//function to get students by class
+exports.getStudentsByClass = async (classname) =>{
+  try {
+    const students = await prisma.class.findMany({
+      where: {
+        class_name: classname.toUpperCase()
+      }, include: {
+        students:true
+      },
+    });
+    console.log(students)
+    return {
+      success: true,
+      message: "Students retrieved successfully.",
+      students: students,
+    };
+  } catch (error) {
+    console.error("Error retrieving students by department:", error);
+    return {
+      success: false,
+      message: "Error retrieving students. Please try again later.",
+    };
+  } finally {
+    await prisma.$disconnect(); // Close Prisma client connection
+  }
+}
 
 // Function to add subjects to a class
 exports.addSubjectsToClass = async (data) => {
@@ -424,3 +450,39 @@ exports.getBusyHoursForFaculty = async (facultyCode) => {
     await prisma.$disconnect();
   }
 }
+
+exports.addAttendanceForMultipleUsers = async (attendanceDataArray) => {
+  try {
+    const attendanceEntries = [];
+
+    for (const attendanceData of attendanceDataArray) {
+      console.log(attendanceData);
+      const { userId, subCode, time, absent, dutyLeave } = attendanceData;
+      //TODO: gracefully handle errors
+      const attendanceEntry = await prisma.attendence.create({
+        data: {
+          user_id: userId,
+          sub_code: subCode,
+          time: time,
+          absent: absent,
+          dutyLeave: dutyLeave,
+        },
+        include: {
+          user: true, // Include user information
+          subject: true, // Include subject information
+        },
+      });
+
+      attendanceEntries.push(attendanceEntry);
+    }
+
+    return attendanceEntries;
+  } catch (error) {
+    console.error('Error adding attendance for multiple users:', error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+};
+
+

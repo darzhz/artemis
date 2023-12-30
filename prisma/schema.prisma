@@ -23,7 +23,7 @@ model Users {
   // Note: 'Stores user data'
   students      Student?  // One-to-Many relationship with Student table
   Faculty       Faculty?
-  attendences   attendence?
+  attendences   attendence[]
   timetable     Timetable[]
 }
 model Faculty {
@@ -97,11 +97,13 @@ model Timetable {
 
 // Prisma schema for attendence table
 model attendence {
-  user_id      Int      @id
-  sub_code     String   @unique
+  attendenceMark  Int @id @default(autoincrement())
+  user_id      Int      
+  sub_code     String   
   time         DateTime
-  absent       Json
-  dutyLeave    Json
+  absent       Int
+  dutyLeave    Int
   user      Users   @relation(fields: [user_id], references: [user_id])
   subject      subjects  @relation(fields: [sub_code], references: [sub_code])
+   @@unique([user_id, sub_code, time])
 }
