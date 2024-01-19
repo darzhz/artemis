@@ -8,3 +8,5 @@
 >UI/UX attendence
 > > header navigation 
 > > single date box
+> > completed ui of attendence
+> > add subject ui
