@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300&display=swap');
 .header {
     display: flex;
     justify-content: space-between;
@@ -18,3 +18,149 @@
 .rotobo-text {
     font-family: 'Roboto', sans-serif;
 }
+.DateBox {
+    display: flex;
+    margin: 10px 0;
+    overflow-x: scroll;
+    max-width: 80vw;
+    gap: 5px;
+    padding: 5px;
+    /* box-shadow: 0px 1px 2px 0px #0000002b; */
+    border-radius: 6px;
+    background-image: linear-gradient(267deg, #4c11c01a, transparent);
+}
+.Box {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 7px 10px -3px rgba(0,0,0,0.1);
+}
+.activeBox,.activeBox .day {
+    background-color: #adb1ff;
+    color: #F8F5F5;
+}
+.day {
+    font-size: x-small;
+    color: rgb(129, 125, 125);
+    font-family: roboto;
+    pointer-events: none;
+}
+.Box:hover .day {
+    color: #F8F5F5;
+}
+.Box:hover{
+    background-color: #adb1ff;
+    color: #F8F5F5;
+}
+.daynum {
+    font-size: large;
+    font-family: roboto;
+    font-style: italic;
+    pointer-events: none;
+}
+.activeStatus {
+    font-family: roboto;
+    color: darkgrey;
+    font-size: x-small;
+    display: flex;
+}
+
+
+.classroom-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+    width: 80vw;
+  }
+  
+  .bench {
+    display: flex;
+    gap: 7px;
+    flex-wrap: nowrap;
+    align-content: space-between;
+    justify-content: center;
+  }
+  
+  .student-box {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #808080; /* Grey box for all students */
+    color: #fff;
+    cursor: pointer;
+    font-family: roboto;
+    font-size: x-small;
+    border-radius: 5px;
+    box-shadow: 0px 7px 10px -3px rgba(0,0,0,0.1);
+    text-shadow: 0px 0px 3px #00000094;
+  }
+  
+  .present {
+    background-color: #00cc00; /* Green box for present students */
+  }
+  
+  .absent {
+    background-color: #e40a14; /* Red box for absent students */
+  }
+  
+  .onDuty {
+    background-color: #74a3ff; /* Blue box for students on duty */
+  }
+  .controls {
+    font-family: roboto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+    width: 80vw;
+  }
+  .controls select {
+    height: 30px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background-color: #adb1ff;
+    color: #F8F5F5;
+    outline: none;
+  }
+  .controls input {
+    height: 30px;
+    width:150px;
+    outline: none;
+    font-size: small;
+  }
+  .controls input::placeholder{
+    font-size: x-small;
+    text-align: center;
+  }
+  .controls button{
+    height: 30px;
+    border-radius: 0px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background-color: #adb1ff;
+    color: #F8F5F5;
+    line-height: 0;
+    outline: none;
+  }
+  .present-color {
+    color: green; /* or your preferred color for present status */
+  }
+  
+  .absent-color {
+    color: red; /* or your preferred color for absent status */
+  }
+  
+  .onDuty-color {
+    color: blue; /* or your preferred color for onDuty status */
+  }
+  @media (min-width: 568px) {
+    .classroom-grid {
+        grid-template-columns: repeat(3,1fr);
+    }
+  }

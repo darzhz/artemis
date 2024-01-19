@@ -7,7 +7,6 @@ import Attendence from './components/Attendence'
 function App() {
   return (
     <>
-      <img src={reactLogo} className="mx-auto mb-10 h-20 mt-0"/>
       {/* <RegistrationForm /> */}
       <Attendence/>
     </>
