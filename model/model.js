@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 exports.RegisterNewUser = async (data) => {
   const { name, role, email } = data;
-  console.log(name, role, email);
+  console.log(data);
   try {
     // Check if user with the same email already exists
     const existingUser = await prisma.users.findUnique({
@@ -64,11 +64,12 @@ exports.RegisterNewUser = async (data) => {
           },
         },
       });
-    } else if (role == "faculty") {
-      const { department, Frole } = data;
+    } else if (role == "faculty") { //TODO ADD CALUSES FOR HOD AND ADMIN
+      const { deptName, Frole } = data;
+      debugger;
       const dept = await prisma.department.findUnique({
         where: {
-          dept_name: department,
+          dept_name: deptName,
         },
       });
       const newFaculty = await prisma.faculty.create({

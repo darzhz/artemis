@@ -159,6 +159,14 @@
   .onDuty-color {
     color: blue; /* or your preferred color for onDuty status */
   }
+  .tablecontent {
+    width: 80vw;
+    font-family: roboto;
+    text-align: center;
+  }
+  .mb-4{
+    width: 80vw;
+  }
   @media (min-width: 568px) {
     .classroom-grid {
         grid-template-columns: repeat(3,1fr);

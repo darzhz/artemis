@@ -319,7 +319,6 @@ const Attendence = () => {
   const [activeHour, setActiveHour] = useState({ class_name:'please select', period:'please select', subcode:'please select' });
   return (
     <>
-      <Header />
       <DateBox
         active={active}
         setActive={setActive}

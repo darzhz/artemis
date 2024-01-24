@@ -1,9 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Transition } from "@headlessui/react";
 import { useState} from "react";
 import "./styles/header.css";
+import LinkAll from "./LinksAll";
+import {  useNavigate } from "react-router-dom";
 const NavigationMenu = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const navigate = useNavigate();
+    const handleLogout = () => {
+      // Perform logout logic (e.g., call server logout endpoint)
+      // Update the user state to null
+      console.log("logged out")
+      localStorage.removeItem('user');
+      navigate('/login')
+    };
     return (
       <div className="relative">
         {/* Hamburger Icon */}
@@ -42,7 +52,7 @@ const NavigationMenu = () => {
             {/* Menu Items */}
             <div className="py-1">
               <a
-                href="#"
+                href="/"
                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               >
                 Home
@@ -53,31 +63,61 @@ const NavigationMenu = () => {
               >
                 About
               </a>
+              <a
+                href="/addsub"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              >
+                Add subject
+              </a>
+              <a
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                onClick={()=>handleLogout()}
+              >
+                logout
+              </a>
               {/* Add more menu items as needed */}
+            
             </div>
           </div>
         </Transition>
       </div>
     );
   };
-  const Header = () => {
+  const Header = ( {user} ) => {
+    const navigate = useNavigate();
+    const storedUser = localStorage.getItem('user');
+    const userloc = storedUser ? JSON.parse(storedUser) : null;
+    const url = storedUser?"https://api.dicebear.com/7.x/bottts/svg?seed="+userloc.username:"https://api.dicebear.com/7.x/bottts/svg?seed=test";
+    console.log(storedUser,userloc)
+    useEffect(() => {
+      if (userloc==null && location.pathname !== '/login') {
+          navigate('/login');
+      }
+  }, [user]);
     return (
+      <>
+      {userloc ? (
       <div className="header">
         <div className="inner">
           <img
             id="userimg"
-            src="https://api.dicebear.com/7.x/bottts/svg?seed=amaz"
+            src={url}
             alt="server unavailbale"
-            height="75px"
-            width="75px"
+            height="70px"
+            width="70px"
           />
           <div className="flex flex-col items-start rotobo-text">
-            <span>USERNAME</span>
+            <span>{userloc.username}</span>
             <span>type</span>
           </div>
         </div>
         <NavigationMenu />
       </div>
+    ):(
+      <>
+      </>
+    )}
+    </>
     );
   };
 export default Header;
