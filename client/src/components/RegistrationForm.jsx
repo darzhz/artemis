@@ -1,13 +1,16 @@
 import React, { useState } from "react";
+import bcrypt from "bcryptjs";
 
 const RegistrationForm = () => {
   const [userData, setUserData] = useState({
     name: "",
     role: "",
     email: "",
-    // Add other fields from the Users table
+    password: "", // Add password field
+    contactNumber: "", // Add contact number field
+    address: "", // Add address field
   });
-  async function sendData(data, endpoint) {
+  async function sendData(data, endpoint) { //TODO ADD TO UTILS
     try {
       const response = await fetch(endpoint, {
         method: "POST", // or 'GET' or any other HTTP method
@@ -39,6 +42,7 @@ const RegistrationForm = () => {
     const { name, value } = e.target;
     setUserData((prevData) => ({ ...prevData, [name]: value }));
   };
+
 
   const handleRoleChange = (e) => {
     const role = e.target.value;
@@ -215,11 +219,18 @@ const RegistrationForm = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Combine first and second part data for submission
-    const registrationData = { ...userData, ...secondPartData };
+    const hashedPassword = await bcrypt.hash(userData.password, 10); // 10 is the number of salt rounds
+
+    // Combine first and second part data for submission
+    const registrationData = {
+      ...userData,
+      password: hashedPassword,
+      ...secondPartData,
+    };
     console.log(registrationData);
     sendData(registrationData,'/register')
 
@@ -230,6 +241,9 @@ const RegistrationForm = () => {
       name: "",
       role: "",
       email: "",
+      password: "",
+      contactNumber: "",
+      address: "",
     });
     setSecondPartData({});
   };
@@ -282,6 +296,45 @@ const RegistrationForm = () => {
           onChange={handleInputChange}
           required
         />
+         <label htmlFor="password" className="label">
+          <span className="label-text">Password</span>
+        </label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          className="input input-bordered w-full max-w-xs"
+          value={userData.password}
+          onChange={handleInputChange}
+          required
+        />
+
+        <label htmlFor="contactNumber" className="label">
+          <span className="label-text">Contact Number</span>
+        </label>
+        <input
+          type="text"
+          id="contactNumber"
+          name="contactNumber"
+          className="input input-bordered w-full max-w-xs"
+          value={userData.contactNumber}
+          onChange={handleInputChange}
+          required
+        />
+
+        <label htmlFor="address" className="label">
+          <span className="label-text">Address</span>
+        </label>
+        <input
+          type="text"
+          id="address"
+          name="address"
+          className="input input-bordered w-full max-w-xs"
+          value={userData.address}
+          onChange={handleInputChange}
+          required
+        />
+
 
         {/* Other fields from the Users table */}
 

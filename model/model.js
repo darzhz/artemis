@@ -1,8 +1,9 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+const bcrypt = require('bcrypt');
 
 exports.RegisterNewUser = async (data) => {
-  const { name, role, email } = data;
+  const { name, role, email,address,contactNumber,password } = data;
   console.log(data);
   try {
     // Check if user with the same email already exists
@@ -26,9 +27,9 @@ exports.RegisterNewUser = async (data) => {
         name: name,
         role: role,
         email: email,
-        address: null,
-        contact: null,
-        passwordHash: "123456",
+        address: address,
+        contact: contactNumber,
+        passwordHash: password,
         created_at: new Date().toISOString(),
       },
     });
@@ -485,5 +486,33 @@ exports.addAttendanceForMultipleUsers = async (attendanceDataArray) => {
     await prisma.$disconnect();
   }
 };
+exports.authenticateUser = async (email, hashedPassword) => {
+  try {
+    // Find user by email
+    const userinfo = await prisma.users.findUnique({
+      where: {
+        email: email,
+      },
+    });
+
+    // If user doesn't exist, return invalid email
+    if (!userinfo) {
+      return { status: 'error', message: 'Invalid email' };
+    }
+
+    // Compare hashedPassword with stored passwordHashS
+    const passwordMatch = await bcrypt.compare(hashedPassword, userinfo.passwordHash);
+
+    // If passwords match, return user details
+    if (passwordMatch) {
+      return { status: 'success', user: userinfo }; //FIXME FILTER OUT PASSWORDHASH BEFORE SENDING
+    } else {
+      return { status: 'error', message: 'Invalid password' };
+    }
+  } catch (error) {
+    console.error('Error authenticating user:', error);
+    return { status: 'error', message: 'Internal server error' };
+  }
+}
 
 

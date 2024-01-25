@@ -10,26 +10,50 @@ import Dashboard from './components/Dashboard'
 import { useState } from 'react'
 import Login from './components/Login'
 import MySubs from './components/MySubs'
+import utils from './utils/utils'
+import sendData from './utils/utils'
+import bcrypt from "bcryptjs";
+import { useNavigate } from 'react-router-dom'
 
 function App() {
   const [user, setUser] = useState(null);
-  const handleLogin = (credentials) => {
+  const navigate = useNavigate();
+  const handleLogin = async (credentials) => {
     // Perform login logic (e.g., call server endpoint)
     // If login is successful, update the user state
-    setUser({ username: credentials.username });
-    localStorage.setItem('user',JSON.stringify({ username: credentials.username }))
+    let result = await sendData(credentials,'/api/login');
+    if(result.success){
+      setUser({ username: result.response.username });
+    localStorage.setItem('user',JSON.stringify(result.response))
     return true;
+    }
+    
   };
-  const handleLogout = () => {
-    // Perform logout logic (e.g., call server logout endpoint)
-    // Update the user state to null
-    console.log("logged out")
-    localStorage.removeItem('user');
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("/api/logout", {
+        method: "POST", // Adjust the method based on your server's requirements
+      });
+
+      if (response.ok) {
+        console.log("Logged out successfully");
+      } else {
+        console.error(
+          "Logout failed. Server returned:",
+          response.status,
+          response.statusText
+        );
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
     setUser(null);
+    localStorage.removeItem("user");
+    navigate("/login");
   };
   return (
       <>
-    <Header user={user} handleLogout={handleLogout}/>
+    <Header user={user} handleLogout={handleLogout} />
       <Routes>
       {/* <Route path="/login" element={<Login />} /> */}
       <Route path="/login" element={<Login handleLogin={handleLogin} />} />

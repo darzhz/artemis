@@ -17,7 +17,7 @@ model Users {
   role          String  
   email         String  @unique
   address       String?
-  contact       Int?
+  contact       String?
   passwordHash  String
   created_at    DateTime?
   // Note: 'Stores user data'
