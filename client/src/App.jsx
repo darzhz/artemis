@@ -14,6 +14,7 @@ import utils from './utils/utils'
 import sendData from './utils/utils'
 import bcrypt from "bcryptjs";
 import { useNavigate } from 'react-router-dom'
+import Timetable from './components/Timetable'
 
 function App() {
   const [user, setUser] = useState(null);
@@ -56,9 +57,11 @@ function App() {
     <Header user={user} handleLogout={handleLogout} />
       <Routes>
       {/* <Route path="/login" element={<Login />} /> */}
+      {/* <Route path='/login' element={<Timetable/>}/> */}
       <Route path="/login" element={<Login handleLogin={handleLogin} />} />
         <Route path="/" element={<Dashboard/>} />
         <Route path="/attend" element={<Attendence/>} />
+        <Route path='/timetable' element={<Timetable/>}/>
         <Route path="/addsub" element={<AddSubjectForm/>} />
         <Route path="/register" element={<RegistrationForm/>} />
         <Route path='/MySubs' element={<MySubs/>}/>

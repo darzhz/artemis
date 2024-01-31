@@ -22,6 +22,12 @@ router.get("/getTimetableByClassName/:name", async (req, res) => {
   );
   res.send(result);
 });
+router.get("/getSubjectsByClassname/:name", async (req, res) => {
+  const result = await model.getSubjectsByClassname(
+    req.params.name.toUpperCase()
+  );
+  res.send(result);
+});
 router.get("/getTimetableByDay/:day", async (req, res) => {
   const result = await model.getTimetableByDay(req.params.day);
   res.send(result);

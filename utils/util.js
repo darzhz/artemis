@@ -1,7 +1,8 @@
 const ExcelJS = require('exceljs');
 const path = require('path');
+const model = require('../model/model')
 exports.generateFreeHours = async (busyHours) => {
-  const allDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+  const allDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday","Saturday"];
   const allHours = [1, 2, 3, 4, 5, 6, 7];
   const freeHoursByDay = {};
 
@@ -20,9 +21,9 @@ exports.generateFreeHours = async (busyHours) => {
 
   return freeHoursByDay;
 };
-exports.generateExcel = (data, req, res) => {
+exports.generateExcel = async (data, req, res) => {
   const workbook = new ExcelJS.Workbook();
-
+  console.log('generating lessonplan');
   const facultyName = 'B4:D4';
   const designation = 'F4:H4';
   const semester = 'J4';
@@ -30,16 +31,23 @@ exports.generateExcel = (data, req, res) => {
   const courseName = 'F3:H3';
   const year = 'J3';
   const className = 'L3';
-
+  const facultyResp = await model.getFacultyByFacultyCode(data.faculty_code)
+  if(!facultyResp.success){
+    console.error(facultyResp.message);
+    res.status(500).send('Internal Server Error');
+    return;
+  }
   // Load an existing workbook
+
   workbook.xlsx.readFile(path.join(__dirname, 'example.xlsx'))
       .then(() => {
           // Access the first sheet
           const worksheet = workbook.getWorksheet(1);
 
           // Fill in specific cells with data
-          worksheet.getCell(facultyName).value = data.faculty_code;
-          worksheet.getCell(designation).value = 'Faculty Designation'; // Replace with actual designation
+          console.log(facultyResp.faculty.role)
+          worksheet.getCell(facultyName).value = facultyResp.faculty.facultyName;
+          worksheet.getCell(designation).value = facultyResp.faculty.role; // Replace with actual designation
           worksheet.getCell(semester).value = 'Semester'; // Replace with actual semester
           worksheet.getCell(courseCode).value = data.sub_code;
           worksheet.getCell(courseName).value = data.sub_name;

@@ -8,11 +8,14 @@ const app = express();
 const build = path.join(__dirname, "client/dist");
 const model = require('./model/model')
 app.use(express.static(build));
-app.use('/register',require('./routes/register'));
-app.use('/subjects',require('./routes/subjects'));
-app.use('/student',require('./routes/student'));
-app.use('/class',require('./routes/class'));
-app.use('/search',require("./routes/search"));
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(build, 'index.html'));
+// });
+app.use('/api/register',require('./routes/register'));
+app.use('/api/subjects',require('./routes/subjects'));
+app.use('/api/student',require('./routes/student'));
+app.use('/api/class',require('./routes/class'));
+app.use('/api/search',require("./routes/search"));
 
 // Authentication
 

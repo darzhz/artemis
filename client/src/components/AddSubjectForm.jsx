@@ -28,7 +28,7 @@ const AddSubjectForm = () => {
   useEffect(() => {
     // Fetch faculties data when the component mounts
     axios
-      .get("/search/type/faculty")
+      .get("/api/search/type/faculty")
       .then((response) => setFaculties(response.data))
       .catch((error) => console.error("Error fetching faculties data:", error));
   }, []);
@@ -91,7 +91,7 @@ const AddSubjectForm = () => {
 
     // Send POST request to add subject
     axios
-      .post("http://localhost:8080/subjects/add", subjectData)
+      .post("/api/subjects/add", subjectData)
       .then((response) => {
         console.log("Subject added successfully:", response.data);
         // Optionally, you can reset the form or redirect to another page

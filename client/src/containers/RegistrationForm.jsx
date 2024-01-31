@@ -34,7 +34,7 @@ const RegistrationForm = () => {
     formDataToSend.append('type',formData.type)
 
     try {
-      const response = await fetch('/register', {
+      const response = await fetch('/api/register', {
         method: 'POST',
         body: formDataToSend,
       });

@@ -232,7 +232,7 @@ const RegistrationForm = () => {
       ...secondPartData,
     };
     console.log(registrationData);
-    sendData(registrationData,'/register')
+    sendData(registrationData,'/api/register')
 
     // Optional: Send registrationData to your backend for further processing
 

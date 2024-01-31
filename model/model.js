@@ -163,6 +163,47 @@ exports.insertSubject = async (data) => {
     await prisma.$disconnect(); // Close Prisma client connection
   }
 };
+exports.getFacultyByFacultyCode = async (facultyCode) => {
+  try {
+    // Find the faculty member by faculty code
+    const faculty = await prisma.faculty.findUnique({
+      where: {
+        faculty_id: parseInt(facultyCode),
+      },
+      include: {
+        user: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    if (!faculty) {
+      return {
+        success: false,
+        message: "Faculty member not found.",
+      };
+    }
+
+    return {
+      success: true,
+      message: "Faculty retrieved successfully.",
+      faculty: {
+        ...faculty,
+        facultyName: faculty.user.name, // Add facultyName to the response
+      },
+    };
+  } catch (error) {
+    console.error("Error retrieving faculty by faculty code:", error);
+    return {
+      success: false,
+      message: "Error retrieving faculty. Please try again later.",
+    };
+  } finally {
+    await prisma.$disconnect(); // Close Prisma client connection
+  }
+};
 exports.getSubjectsByFacultyCode = async (facultyCode) => {
   try {
     // Find the faculty member by faculty code
@@ -193,6 +234,64 @@ exports.getSubjectsByFacultyCode = async (facultyCode) => {
     await prisma.$disconnect(); // Close Prisma client connection
   }
 };
+exports.getSubjectsBySubCode = async (subcode) => {
+  try {
+    // Find the faculty member by faculty code
+    const subjects = await prisma.subjects.findUnique({
+      where: {
+        sub_code:subcode,
+      },
+    });
+
+    if (!subjects) {
+      return {
+        success: false,
+        message: "subject  not found.",
+      };
+    }
+    return {
+      success: true,
+      message: "Subjects retrieved successfully.",
+      subjects: subjects,
+    };
+  } catch (error) {
+    console.error("Error retrieving subjects by faculty code:", error);
+    return {
+      success: false,
+      message: "Error retrieving subjects. Please try again later.",
+    };
+  } finally {
+    await prisma.$disconnect(); // Close Prisma client connection
+  }
+};
+exports.getSubjectsByClassname = async (classname) => {
+  try {
+    const classWithSubjects = await prisma.class.findMany({
+      where: { class_name: classname },
+      include: { subjects: true },
+    });
+
+    if (!classWithSubjects) {
+      return {
+        success: false,
+        message: "subject  not found.",
+      };
+    }
+    return {
+      success: true,
+      message: "Subjects retrieved successfully.",
+      subjects: classWithSubjects,
+    };
+  } catch (error) {
+    console.error("Error retrieving subjects by faculty code:", error);
+    return {
+      success: false,
+      message: "Error retrieving subjects. Please try again later.",
+    };
+  } finally {
+    await prisma.$disconnect(); // Close Prisma client connection
+  }
+}
 exports.getStudentsByDept = async (departmentName) => {
   try {
     // Find all students in the specified department
@@ -219,6 +318,7 @@ exports.getStudentsByDept = async (departmentName) => {
     await prisma.$disconnect(); // Close Prisma client connection
   }
 };
+
 // Function to create a class
 exports.createClass = async (data) => {
   const { className, departmentName } = data;

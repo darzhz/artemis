@@ -148,6 +148,13 @@
     line-height: 0;
     outline: none;
   }
+  .control {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 8px 0;
+  }
   .present-color {
     color: green; /* or your preferred color for present status */
   }
@@ -157,13 +164,32 @@
   }
   
   .onDuty-color {
-    color: blue; /* or your preferred color for onDuty status */
+    color: blue; 
+  }
+  .TBox {
+    min-height: 65px;
+  }
+  .TBox:hover{
+    transition: transform ease-in-out 100ms;
+    box-shadow: 0px 0px 15px 6px #adb1ff;
+    border: none;
+    transform: scale3d(1.2, 1.2, 1.2);
   }
   .tablecontent {
     width: 80vw;
     font-family: roboto;
     text-align: center;
   }
+  .free-hour {
+    background-color: #e0ffe0; 
+  }
+  .subject0 { background-color: hsl(0, 80%, 80%); }
+    .subject1 { background-color: hsl(40, 80%, 80%); }
+    .subject2 { background-color: hsl(80, 80%, 80%); }
+    .subject3 { background-color: hsl(120, 80%, 80%); }
+    .subject4 { background-color: hsl(160, 80%, 80%); }
+    .subject5 { background-color: hsl(200, 80%, 80%); }
+    .subject6 { background-color: hsl(240, 80%, 80%); }
   /* .mb-4{
     width: 80vw;
   } */

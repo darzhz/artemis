@@ -23,6 +23,11 @@ const Dashboard = () => {
             </Link>
           </li>
           <li>
+            <Link to="/timetable" className="text-blue-500 hover:text-blue-600">
+              Timetable
+            </Link>
+          </li>
+          <li>
             <Link to="/addsub" className="text-blue-500 hover:text-blue-600">
               add subject
             </Link>

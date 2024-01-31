@@ -6,7 +6,7 @@ const HourComponent = ({ active, activeHour, setActiveHour }) => {
   
     const fetchTimetableData = async () => {
       try {
-        const response = await fetch(`/class/getTimetableByFacultyId/53`);
+        const response = await fetch(`/api/class/getTimetableByFacultyId/53`);
         const data = await response.json();
         setTimetable(data || []);
       } catch (error) {
