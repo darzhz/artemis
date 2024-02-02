@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./styles/header.css";
+import sendData from '../utils/utils'
 export default function Timetable() {
   let weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const [subQueue, setSubQueue] = useState([]);
-  const [selected, setSelected] = useState("N/Aw");
+  const [selected, setSelected] = useState("N/A");
   const [freeHoursData, setFreeHoursData] = useState({});
   const initialArray = Array(7)
     .fill(null)
@@ -23,6 +24,10 @@ export default function Timetable() {
   };
   const save = () => {
     console.log(convertTimetableToJson(subjects))
+  }
+  const [semester,setSemester] = useState(1);
+  const handleSemesterChange = (e) => {
+    setSemester(e.target.value);
   }
   const handleClick = (e) => {
     const row = e.target.getAttribute("row");
@@ -168,6 +173,21 @@ export default function Timetable() {
     const hour = col + 1;
     return freeHoursData[day] && freeHoursData[day].includes(hour);
   };
+  const generateTable = () => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    let tableData = {
+      "facultyName":storedUser.name,
+      "courseCode": "CSE", //FIXME ADD COURSE CODE TO STORED USER
+      "courceName" : "Computer Science And Engineering",
+      "Year" : new Date().getFullYear(),
+      "designation" : storedUser.role,
+      "semester" : semester,
+      "batch" : "cs01",
+      "timetable":subjects
+    }
+    sendData(tableData,'/api/class/generateTimetable')
+    
+  }
   useEffect(() => {
     const update = async () => {
       let data = await fetchData();
@@ -181,6 +201,10 @@ export default function Timetable() {
       <div className="p-4 border-r overflow-auto">
         <h2 className="text-lg font-semibold">Subjects</h2>
         <p className="day">Currently Selected : {selected || "N/A"}</p>
+        <div className="semster-selector flex">
+          <label htmlFor="semester" className=" text-sm font-light">Enter semester</label>
+          <input type="number" name="semester"   placeholder="1" className=" w-16 text-center " min="1" onChange={handleSemesterChange}></input>
+        </div>
         <div className="flex justify-between items-center mb-4">
           <select
             id="sub_code"
@@ -268,7 +292,7 @@ export default function Timetable() {
           <button className="btn btn-outline btn-warning" onClick={handleReset}>
             reset
           </button>
-          <button className="btn btn-outline btn-info">
+          <button className="btn btn-outline btn-info" onClick={generateTable}>
             Generate Timetable
           </button>
         </div>

@@ -94,3 +94,141 @@ exports.generateExcel = async (data, req, res) => {
           res.status(500).send('Internal Server Error');
       });
 };
+exports.generateTimetableExcel = async(data,req,res) => {
+  const workbook = new ExcelJS.Workbook();
+  console.log('generating Timetable');
+  const courseCode = 'D3';
+  const courseName = 'F3:H3';
+  const year = 'J3';
+  const className = 'L3';
+  const facultyName = 'B4:D4';
+  const designation = 'F4:H4';
+  const semester = 'J4';
+  const Timedata = [
+    [
+        "mecon 63",
+        "mecon 63",
+        "mecon 63",
+        "mecon 63",
+        "CS201 53",
+        "CS201 53",
+        "mecon 63"
+    ],
+    [
+        "mecon 63",
+        "CS202 53",
+        "CS202 53",
+        "CS202 53",
+        "CS202 53",
+        "CS201 53",
+        "mecon 63"
+    ],
+    [
+        "mecon 63",
+        "CS201 53",
+        "CS202 53",
+        "CS202 53",
+        "CS202 53",
+        "CS201 53",
+        "CS201 53"
+    ],
+    [
+        "mecon 63",
+        "CS201 53",
+        "mecon 63",
+        "mecon 63",
+        "mecon 63",
+        "CS201 53",
+        "CS202 53"
+    ],
+    [
+        "mecon 63",
+        "CS201 53",
+        "CS202 53",
+        "CS202 53",
+        "CS202 53",
+        "CS201 53",
+        "CS202 53"
+    ],
+    [
+        "CS201 53",
+        "CS202 53",
+        "CS202 53",
+        "CS201 53",
+        "CS202 53",
+        "CS202 53",
+        "CS202 53"
+    ]
+]
+  workbook.xlsx.readFile(path.join(__dirname, 'time.xlsx'))
+      .then(() => {
+        const worksheet = workbook.getWorksheet(1);
+          worksheet.getCell(facultyName).value = 'random';
+          worksheet.getCell(designation).value = 'designation'; 
+          worksheet.getCell(semester).value = 'Semester'; 
+          worksheet.getCell(courseCode).value = 'code_123';
+          worksheet.getCell(courseName).value = 'juggling';
+          worksheet.getCell(year).value = '2002'; 
+          worksheet.getCell(className).value = 'super'; 
+          //time table starts with c8 and ends at j8 while skiping  all H
+          let timetableRow = 8;
+          let timetableColumn = 3;
+    
+          Timedata.forEach((row) => {
+            row.forEach((cell) => {
+              // Skip column H
+              if (timetableColumn !== 8) {
+                worksheet.getCell(`${getExcelLetter(timetableColumn)}${timetableRow}`).value = cell;
+              }else{
+                worksheet.getCell(`${getExcelLetter(timetableColumn+1)}${timetableRow}`).value = cell;
+                timetableColumn++;
+              }
+              timetableColumn++;
+            });
+            timetableColumn = 3; // Reset column for the next row
+            timetableRow++;
+          });
+          //last row starts at c13 and ends at j13 while skiping  all H
+          res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+          res.setHeader('Content-Disposition', 'attachment; filename=updated-time.xlsx');
+
+          // Pipe the workbook directly to the response
+          return workbook.xlsx.write(res);
+      })
+      .then(() => {
+          console.log('Excel file updated successfully and sent for download.');
+      })
+      .catch((error) => {
+          console.error('Error:', error.message);
+          res.status(500).send('Internal Server Error');
+      });
+}
+function getExcelLetter(columnIndex) {
+  let letter = '';
+  while (columnIndex > 0) {
+    const remainder = (columnIndex - 1) % 26;
+    letter = String.fromCharCode('A'.charCodeAt(0) + remainder) + letter;
+    columnIndex = Math.floor((columnIndex - 1) / 26);
+  }
+  return letter;
+}
+const convertJsonToTimetable = (input) => {
+  let weekDays = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  let initialArray = Array(7)
+    .fill(null)
+    .map(() => Array(weekDays.length + 1).fill(null));
+  input.forEach((item) => {
+    const row = item.period - 1;
+    const col = weekDays.indexOf(item.day);
+    initialArray[row][col] = item.class_name + " " + item.faculty_id;
+    initialArray[row][col] = item.sub_code + " " + item.faculty_id;
+  });
+  console.log(initialArray);
+};

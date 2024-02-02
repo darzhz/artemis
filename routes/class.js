@@ -52,4 +52,11 @@ router.post("/addAttendanceForMultipleUsers", async (req, res) => {
   const result = await model.addAttendanceForMultipleUsers(req.body.data);
   res.send(result);
 });
+router.post('/generateTimetable',async (req,res)=> {
+  console.log(req.body);
+
+  res.sendStatus(200);
+
+  //utils.generateTimetableExcel(req.body,req,res);
+})
 module.exports = router;
