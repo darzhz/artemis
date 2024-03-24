@@ -11,11 +11,15 @@ app.use(express.static(build));
 // app.get('*', (req, res) => {
 //   res.sendFile(path.join(build, 'index.html'));
 // });
+app.use('/api/department',require('./routes/departments'));
 app.use('/api/register',require('./routes/register'));
 app.use('/api/subjects',require('./routes/subjects'));
 app.use('/api/student',require('./routes/student'));
 app.use('/api/class',require('./routes/class'));
 app.use('/api/search',require("./routes/search"));
+app.use('/api/exam',require("./routes/exam"));
+
+// app.use('/api/departments',require('./routes/departments');
 
 // Authentication
 

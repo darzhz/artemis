@@ -3,7 +3,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width:80vw;
+    /* width:80vw; */
 }
 .inner {
     display: flex;
@@ -182,6 +182,18 @@
   }
   .free-hour {
     background-color: #e0ffe0; 
+  }
+  .module-color {
+    background-color: rgba(0, 128, 128, 0.541);
+  }
+  .moduleName-color {
+    background-color: rgba(0, 128, 0, 0.555);
+  }
+  .topicName-color {
+    background-color: rgba(0, 0, 255, 0.466);
+  }
+  .duration-color {
+    background-color: rgba(255, 0, 0, 0.534);
   }
   .subject0 { background-color: hsl(0, 80%, 80%); }
     .subject1 { background-color: hsl(40, 80%, 80%); }

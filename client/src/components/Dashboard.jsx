@@ -4,7 +4,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import LinkAll from './LinksAll';
 
-const Dashboard = () => {
+const Dashboard = ({ user }) => {
   return (
     <div className="min-h-screen bg-gray-100 flex">
       <div className="flex-shrink-0 w-64 bg-white border-r border-gray-200 p-4">
@@ -27,6 +27,8 @@ const Dashboard = () => {
               Timetable
             </Link>
           </li>
+          {user.role === 'Admin'&&
+          <>
           <li>
             <Link to="/addsub" className="text-blue-500 hover:text-blue-600">
               add subject
@@ -37,6 +39,13 @@ const Dashboard = () => {
               register
             </Link>
           </li>
+          <li>
+            <Link to="/exams" className="text-blue-500 hover:text-blue-600">
+              exams
+            </Link>
+          </li>
+          </>
+}
           {/* Add more links for other components */}
         </ul>
       </nav>

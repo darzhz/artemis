@@ -345,7 +345,6 @@ exports.createClass = async (data) => {
     await prisma.$disconnect();
   }
 };
-
 // Function to add students to a class
 exports.addStudentsToClass = async (data) => {
   const { classId, studentIds } = data;
@@ -441,7 +440,7 @@ exports.addSubjectsToClass = async (data) => {
 };
 
 exports.addTimetableEntry = async (data) => {
-  const { day, period, className, facultyId, sub_code, departmentName } = data;
+  const { day, period, class_name, faculty_id, sub_code, dept_name } = data;
 
   try {
     const timetableEntry = await prisma.timetable.create({
@@ -450,13 +449,13 @@ exports.addTimetableEntry = async (data) => {
         period,
         sub_code: sub_code,
         lecturer: {
-          connect: { user_id: facultyId }, // Connect the facultyId to the user_id in Users model
+          connect: { user_id: faculty_id }, // Connect the facultyId to the user_id in Users model
         },
         department: {
-          connect: { dept_name: departmentName },
+          connect: { dept_name: dept_name },
         },
         class: {
-          connect: { class_name: className },
+          connect: { class_name: class_name },
         },
       },
     });
@@ -614,5 +613,123 @@ exports.authenticateUser = async (email, hashedPassword) => {
     return { status: 'error', message: 'Internal server error' };
   }
 }
+exports.saveTable = async (timetableEntries) => {
+  const results = [];
 
+  for (const entry of timetableEntries) {
+    const result = await prisma.timetable.create({
+      data: entry,
+    });
+    results.push(result);
+  }
+
+  return results;
+};
+exports.getAllClasses = async () => {
+  try {
+    const classes = await prisma.class.findMany();
+    return classes;
+  } catch (error) {
+    console.error('Error getting all classes:', error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+};
+exports.getAllDepartments = async () => {
+  try {
+    const departments = await prisma.department.findMany();
+    return departments;
+  } catch (error) {
+    console.error('Error getting all departments:', error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+// Get all exams with status 
+exports.getExamsByStatus = async (status) => {
+  try {
+    const exams = await prisma.examType.findMany({
+      where: {
+        status: parseInt(status),
+      },
+    });
+    return exams;
+  } catch (error) {
+    console.error('Error getting exams by status:', error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+//add exam to the database
+/*
+model examType {
+  exam_id      Int      @id @default(autoincrement())
+  exam_name    String
+  status       Int        @default(1)
+  maxMarks     Int
+  minMarks     Int
+  passMarks    Int
+  examDate     DateTime
+  sub_code     String
+  deptid       Int
+  faculty_id   Int
+  faculty      Faculty   @relation(fields: [faculty_id], references: [faculty_id])
+  department   department @relation(fields: [deptid], references: [deptid])
+  subject      subjects   @relation(fields: [sub_code], references: [sub_code])
+  examMarks    examMarks[]
+  @@unique([exam_name, sub_code, examDate])
+}
+// model examMarks {
+    //   examMarks_id  Int      @id @default(autoincrement())
+    //   exam_id       Int
+    //   user_id       Int
+    //   marks         Int
+    //   user          Users   @relation(fields: [user_id], references: [user_id])
+    //   examType      examType @relation(fields: [exam_id], references: [exam_id])
+    //   @@unique([exam_id, user_id])
+    // } add an option to add marks to the exam by creating a new table with a list of students and their marks using class id*/
+exports.addExam = async (examData) => {
+  console.log(examData);
+  //perform type conversion and validation
+  examData.status = parseInt(examData.status);
+  examData.examDate = new Date(examData.examDate);
+  examData.maxMarks = parseInt(examData.maxMarks);
+  examData.minMarks = parseInt(examData.minMarks);
+  examData.deptid = parseInt(examData.deptid);
+  examData.sub_code = examData.sub_code.toUpperCase();
+  examData.exam_name = examData.exam_name.toUpperCase();
+  examData.passMarks = parseInt(examData.passMarks);
+  try {
+    const newExam = await prisma.examType.create({
+      data: {
+        exam_name: examData.exam_name,
+        status: 1,
+        maxMarks: examData.maxMarks,
+        minMarks: examData.minMarks,
+        passMarks: examData.passMarks,
+        examDate: examData.examDate,
+        classid: examData.classid,
+        department: {
+          connect: { deptid: examData.deptid },
+        },
+        subject: {
+          connect: { sub_code: examData.sub_code },
+        },
+        faculty: {
+          connect: { faculty_id: examData.faculty_id },
+        },
+      },
+    });
+    return newExam;
+
+  } catch (error) {
+    console.error('Error adding exam:', error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
 

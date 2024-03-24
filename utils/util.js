@@ -104,72 +104,73 @@ exports.generateTimetableExcel = async(data,req,res) => {
   const facultyName = 'B4:D4';
   const designation = 'F4:H4';
   const semester = 'J4';
-  const Timedata = [
-    [
-        "mecon 63",
-        "mecon 63",
-        "mecon 63",
-        "mecon 63",
-        "CS201 53",
-        "CS201 53",
-        "mecon 63"
-    ],
-    [
-        "mecon 63",
-        "CS202 53",
-        "CS202 53",
-        "CS202 53",
-        "CS202 53",
-        "CS201 53",
-        "mecon 63"
-    ],
-    [
-        "mecon 63",
-        "CS201 53",
-        "CS202 53",
-        "CS202 53",
-        "CS202 53",
-        "CS201 53",
-        "CS201 53"
-    ],
-    [
-        "mecon 63",
-        "CS201 53",
-        "mecon 63",
-        "mecon 63",
-        "mecon 63",
-        "CS201 53",
-        "CS202 53"
-    ],
-    [
-        "mecon 63",
-        "CS201 53",
-        "CS202 53",
-        "CS202 53",
-        "CS202 53",
-        "CS201 53",
-        "CS202 53"
-    ],
-    [
-        "CS201 53",
-        "CS202 53",
-        "CS202 53",
-        "CS201 53",
-        "CS202 53",
-        "CS202 53",
-        "CS202 53"
-    ]
-]
+//   const Timedata = [
+//     [
+//         "mecon 63",
+//         "mecon 63",
+//         "mecon 63",
+//         "mecon 63",
+//         "CS201 53",
+//         "CS201 53",
+//         "mecon 63"
+//     ],
+//     [
+//         "mecon 63",
+//         "CS202 53",
+//         "CS202 53",
+//         "CS202 53",
+//         "CS202 53",
+//         "CS201 53",
+//         "mecon 63"
+//     ],
+//     [
+//         "mecon 63",
+//         "CS201 53",
+//         "CS202 53",
+//         "CS202 53",
+//         "CS202 53",
+//         "CS201 53",
+//         "CS201 53"
+//     ],
+//     [
+//         "mecon 63",
+//         "CS201 53",
+//         "mecon 63",
+//         "mecon 63",
+//         "mecon 63",
+//         "CS201 53",
+//         "CS202 53"
+//     ],
+//     [
+//         "mecon 63",
+//         "CS201 53",
+//         "CS202 53",
+//         "CS202 53",
+//         "CS202 53",
+//         "CS201 53",
+//         "CS202 53"
+//     ],
+//     [
+//         "CS201 53",
+//         "CS202 53",
+//         "CS202 53",
+//         "CS201 53",
+//         "CS202 53",
+//         "CS202 53",
+//         "CS202 53"
+//     ]
+// ]
+const Timedata = data.timetable
   workbook.xlsx.readFile(path.join(__dirname, 'time.xlsx'))
       .then(() => {
         const worksheet = workbook.getWorksheet(1);
-          worksheet.getCell(facultyName).value = 'random';
-          worksheet.getCell(designation).value = 'designation'; 
-          worksheet.getCell(semester).value = 'Semester'; 
-          worksheet.getCell(courseCode).value = 'code_123';
-          worksheet.getCell(courseName).value = 'juggling';
-          worksheet.getCell(year).value = '2002'; 
-          worksheet.getCell(className).value = 'super'; 
+          worksheet.getCell(facultyName).value = data.facultyName;
+          worksheet.getCell(designation).value = data.designation; 
+          worksheet.getCell(semester).value = data.semester; 
+          worksheet.getCell(courseCode).value = data.courseCode;
+          worksheet.getCell(courseName).value = data.courceName;
+          worksheet.getCell(year).value = data.Year; 
+          worksheet.getCell(className).value = data.batch; 
           //time table starts with c8 and ends at j8 while skiping  all H
           let timetableRow = 8;
           let timetableColumn = 3;

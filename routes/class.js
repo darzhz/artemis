@@ -8,6 +8,10 @@ router.post("/add", async (req, res) => {
   const result = await model.createClass(req.body);
   res.send(result);
 });
+router.get("/getAllClasses", async (req, res) => {
+  const result = await model.getAllClasses();
+  res.send(result);
+});
 router.post("/addTimeTable", async (req, res) => {
   const result = await model.addTimetableEntry(req.body);
   res.send(result);
@@ -52,11 +56,25 @@ router.post("/addAttendanceForMultipleUsers", async (req, res) => {
   const result = await model.addAttendanceForMultipleUsers(req.body.data);
   res.send(result);
 });
+router.post('/saveTable', async (req,res) => {
+  console.log(req.body)
+  const resp = await addTimetableEntries(req.body);
+  console.log(resp);
+  res.send(resp);
+})
+const addTimetableEntries = async (timetableEntries) => {
+  const results = [];
+
+  for (const entry of timetableEntries) {
+    const result = await model.addTimetableEntry(entry);
+    results.push(result);
+  }
+
+  return results;
+};
+
 router.post('/generateTimetable',async (req,res)=> {
   console.log(req.body);
-
-  res.sendStatus(200);
-
-  //utils.generateTimetableExcel(req.body,req,res);
+  utils.generateTimetableExcel(req.body,req,res);
 })
 module.exports = router;

@@ -25,11 +25,13 @@ model Users {
   Faculty       Faculty?
   attendences   attendence[]
   timetable     Timetable[]
+  examMarks     examMarks[]
 }
 model Faculty {
   faculty_id    Int @id
   role          String
   dept_name     String
+  examType      examType[]
   department    department @relation(fields: [dept_name], references: [dept_name])
   user          Users @relation(fields: [faculty_id],references: [user_id])
 }
@@ -58,6 +60,7 @@ model department {
   subjects    subjects[]
   faculties   Faculty[]
   classes     Class[]
+  examType    examType[]
   timetables  Timetable[] // Add this line to define the opposite relation
 }
 model Class {
@@ -78,6 +81,7 @@ model subjects {
   subinfo       Json?
   department    department @relation(fields: [deptid], references: [deptid])
   attendences   attendence[]
+  examType      examType[]
   classes       Class[]
 }
 
@@ -106,4 +110,35 @@ model attendence {
   user      Users   @relation(fields: [user_id], references: [user_id])
   subject      subjects  @relation(fields: [sub_code], references: [sub_code])
    @@unique([user_id, sub_code, time])
+}
+//prisma schema for types of exams with their parameters
+//a faculty can create an exam for a subject and assign marks to students
+model examType {
+  exam_id      Int      @id @default(autoincrement())
+  exam_name    String
+  status       Int        @default(1)
+  maxMarks     Int
+  minMarks     Int
+  passMarks    Int
+  examDate     DateTime
+  sub_code     String
+  deptid       Int
+  Semester     Int
+  faculty_id   Int      @default(63)
+  classid      Int      @default(2)
+  faculty      Faculty   @relation(fields: [faculty_id], references: [faculty_id])
+  department   department @relation(fields: [deptid], references: [deptid])
+  subject      subjects   @relation(fields: [sub_code], references: [sub_code])
+  examMarks    examMarks[]
+  @@unique([exam_name, sub_code, examDate])
+}
+//prisma schema for individual exam marks
+model examMarks {
+  examMarks_id  Int      @id @default(autoincrement())
+  exam_id       Int
+  user_id       Int
+  marks         Int
+  user          Users   @relation(fields: [user_id], references: [user_id])
+  examType      examType @relation(fields: [exam_id], references: [exam_id])
+  @@unique([exam_id, user_id])
 }

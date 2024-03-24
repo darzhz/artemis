@@ -23,7 +23,8 @@ export default function Timetable() {
     setSubjects(initialArray);
   };
   const save = () => {
-    console.log(convertTimetableToJson(subjects))
+    console.log(convertTimetableToJson(subjects));
+    sendData(convertTimetableToJson(subjects),'/api/class/saveTable');
   }
   const [semester,setSemester] = useState(1);
   const handleSemesterChange = (e) => {
@@ -110,7 +111,6 @@ export default function Timetable() {
           const period = rowIndex + 1;
 
           jsonResult.push({
-            timetable_id: jsonResult.length + 1,
             day,
             period,
             class_name: "cs01",
@@ -173,7 +173,7 @@ export default function Timetable() {
     const hour = col + 1;
     return freeHoursData[day] && freeHoursData[day].includes(hour);
   };
-  const generateTable = () => {
+  const generateTable = async () => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     let tableData = {
       "facultyName":storedUser.name,
@@ -185,9 +185,34 @@ export default function Timetable() {
       "batch" : "cs01",
       "timetable":subjects
     }
-    sendData(tableData,'/api/class/generateTimetable')
-    
-  }
+    try {
+      const response = await await fetch('api/class/generateTimetable', {
+        method: "POST", // or 'GET' or any other HTTP method
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(tableData),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      // Assuming the server responds with the correct content type for the file (e.g., 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+      const blob = await response.blob();
+      console.log(blob);
+  
+      const downloadLink = document.createElement('a');
+      downloadLink.href = window.URL.createObjectURL(blob);
+      downloadLink.download = 'timetable.xlsx';
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+  
+    } catch (error) {
+      console.error('Error generating timetable:', error);
+    }
+  };
   useEffect(() => {
     const update = async () => {
       let data = await fetchData();
@@ -292,7 +317,7 @@ export default function Timetable() {
           <button className="btn btn-outline btn-warning" onClick={handleReset}>
             reset
           </button>
-          <button className="btn btn-outline btn-info" onClick={generateTable}>
+          <button className="btn btn-outline btn-info" onClick={generateTable} >
             Generate Timetable
           </button>
         </div>
